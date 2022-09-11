@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EDScoutBuddy.EDJournal;
 using EDScoutBuddy.EDSM;
+using System.Windows.Forms;
 
 namespace EDScoutBuddy
 {
@@ -232,7 +233,7 @@ namespace EDScoutBuddy
 
         public cJournalReader()
         {
-            ElitePath = "C:/Users/jvand/Saved Games/Frontier Developments/Elite Dangerous/";
+            ElitePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games\\Frontier Developments\\Elite Dangerous\\");
             JournalFilter = "Journal.*T*.log";
         }
 
