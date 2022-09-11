@@ -10,3 +10,10 @@ Planet calculation from https://github.com/joncage/ed-scout
 Listview from https://www.codeproject.com/Articles/13006/Extended-ListView
 Planet and Star definition from https://github.com/EDSM-NET/FrontEnd
 Gets star system info from https://www.edsm.net/
+
+Icons:
+https://www.flaticon.com/free-icon/gas-station_1000437?related_id=1000437&origin=search
+https://www.flaticon.com/free-icon/gas-station_1000539?term=refuel&page=1&position=2&page=1&position=2&related_id=1000539&origin=search
+https://www.flaticon.com/free-icon/medal_2583344?term=first&related_id=2583344#
+https://www.flaticon.com/free-icon/honk_6647080?term=honk&page=1&position=2&page=1&position=2&related_id=6647080&origin=search
+https://www.flaticon.com/free-icon/honk_6647060?term=honk&page=1&position=6&page=1&position=6&related_id=6647060&origin=search#

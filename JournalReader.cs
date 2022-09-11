@@ -11,19 +11,6 @@ namespace EDScoutBuddy
 {
     internal class cJournalReader
     {
-        /*
-        [CHECK]      WasDiscovered is niet correct als iemand geen edmarket gebruikt heeft. (check wasdiscovered, check dit ook na dat je een fss hebt gedaan)
-        [OPGELOST?]  Jumping gaat te vlug naar volgende system, tijdens het jumpen
-        [CHECK]      check wat er gebeurd als je een volledig gescande system weer inkomt.
-        Setup scherm maken
-        Online Updaten
-        Was discovered check tussen ED en Online
-        Window Icon en title
-        detect ED journal folder
-        multiple commanders
-        Journal filter settings
-        [DONE]Read journals voor laatste info (kan ook meerder journals terug zijn, hoe dit te checken of alles inlezen?)
-        */
         private string m_ElitePath = "";
         private string m_JournalFilter = "";
         private string m_CurrentJournalFile = "";
