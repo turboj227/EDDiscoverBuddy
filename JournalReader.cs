@@ -22,7 +22,7 @@ namespace EDScoutBuddy
         detect ED journal folder
         multiple commanders
         Journal filter settings
-        Read journals voor laatste info (kan ook meerder journals terug zijn, hoe dit te checken of alles inlezen?)
+        [DONE]Read journals voor laatste info (kan ook meerder journals terug zijn, hoe dit te checken of alles inlezen?)
         */
         private string m_ElitePath = "";
         private string m_JournalFilter = "";
@@ -68,13 +68,6 @@ namespace EDScoutBuddy
                                         EDSystemInfo.Honked = false;
                                         EDSystemInfo.BodyCount = 0;
                                         EDSystemInfo.FullyScanned = false;
-                                        //EDSystemInfo.NextSystem.StarSystem = FSDTarget.Name;
-                                        //EDSystemInfo.NextSystem.SystemAddress = FSDTarget.SystemAddress;
-                                        //EDSystemInfo.NextSystem.StarClass = FSDTarget.StarClass;
-                                        //EDSystemInfo.NextSystem.WasDiscoveredOnline = false;
-                                        //EDSystemInfo.NextSystem.CanRefuel = FSDTarget.StarClass.In("K", "G", "B", "F", "O", "A", "M");
-                                        //EDSystemInfo.NextSystem.LookupOnline = true;
-                                        //EDSystemInfo.NextSystem.Bodies.Clear();
                                     }
                                 }
                                 break;
@@ -258,17 +251,25 @@ namespace EDScoutBuddy
 
         public void ReadAllEntries(ref cEDSystemInfo EDSystemInfo, bool CatchUp)
         {
-            if (GetCurrentJournal())
-            {
-                string allText = ReadJournal();
-                ProcessLogFile(ref EDSystemInfo, allText, CatchUp);
-            }
+            //Get all Journal files
+            string[] JournalFiles = Directory.GetFiles(ElitePath, JournalFilter);
+
+            //Read all journal files or only last one(s)
+            string allText = "";
+            JournalFiles.Where(W => W.CompareTo(CurrentJournalFile) >= 0 || CurrentJournalFile == "")
+                .OrderBy(o => o).ToList().ForEach(f => allText += ReadJournal(f));
+
+            //Process all Journal files data
+            ProcessLogFile(ref EDSystemInfo, allText, CatchUp);
+            
+            //Get last Journal file for next run
+            CurrentJournalFile = JournalFiles.Where(W => W.CompareTo(CurrentJournalFile) >= 0 || CurrentJournalFile == "").OrderBy(o => o).LastOrDefault("");
         }
 
-        private string ReadJournal()
+        private string ReadJournal(string JournalFile)
         {
             string allText = "";
-            using (var fs = new FileStream(CurrentJournalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fs = new FileStream(JournalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (var sr = new StreamReader(fs, Encoding.Default))
                 {
@@ -281,13 +282,6 @@ namespace EDScoutBuddy
             return allText;
         }
 
-        private bool GetCurrentJournal()
-        {
-            string[] JournalFiles = Directory.GetFiles(ElitePath, JournalFilter);
-            CurrentJournalFile = JournalFiles.OrderByDescending(f => f).FirstOrDefault("");
-
-            return CurrentJournalFile != "";
-        }
     }
 
 
