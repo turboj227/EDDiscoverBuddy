@@ -53,9 +53,9 @@ namespace EDScoutBuddy
                                     {
                                         //New next system
                                         EDSystemInfo.RemainingJumps = FSDTarget.RemainingJumpsInRoute;
-                                        EDSystemInfo.Honked = false;
+                                        /*EDSystemInfo.Honked = false;
                                         EDSystemInfo.BodyCount = 0;
-                                        EDSystemInfo.FullyScanned = false;
+                                        EDSystemInfo.FullyScanned = false;*/
                                     }
                                 }
                                 break;
@@ -70,6 +70,8 @@ namespace EDScoutBuddy
                                         EDSystemInfo.CurrentSystem.StarClass = EDSystemInfo.NextSystem.StarClass;
                                         EDSystemInfo.CurrentSystem.CanRefuel = EDSystemInfo.NextSystem.StarClass.In("K", "G", "B", "F", "O", "A", "M");
                                         EDSystemInfo.CurrentSystem.LookupOnline = true;
+                                        EDSystemInfo.BodyCount = 0;
+                                        EDSystemInfo.Honked = false;
                                         EDSystemInfo.CurrentSystem.Bodies.Clear();
                                     }
                                 }
