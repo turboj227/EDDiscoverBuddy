@@ -41,7 +41,6 @@ namespace EDDiscoverBuddy
             this.lsvSystemInfo = new EXControls.EXListView();
             this.hdrIcons1 = new EXControls.EXColumnHeader();
             this.hdrIcons2 = new System.Windows.Forms.ColumnHeader();
-            this.hdrBodies1 = new System.Windows.Forms.ColumnHeader();
             this.hdrJumps1 = new System.Windows.Forms.ColumnHeader();
             this.hdrSystem1 = new System.Windows.Forms.ColumnHeader();
             this.lsvHighValuePlanets = new EXControls.EXListView();
@@ -64,7 +63,6 @@ namespace EDDiscoverBuddy
             this.lsvSystemInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hdrIcons1,
             this.hdrIcons2,
-            this.hdrBodies1,
             this.hdrJumps1,
             this.hdrSystem1});
             this.lsvSystemInfo.ControlPadding = 4;
@@ -76,31 +74,28 @@ namespace EDDiscoverBuddy
             this.lsvSystemInfo.Location = new System.Drawing.Point(12, 12);
             this.lsvSystemInfo.Name = "lsvSystemInfo";
             this.lsvSystemInfo.OwnerDraw = true;
+            this.lsvSystemInfo.Scrollable = false;
             this.lsvSystemInfo.Size = new System.Drawing.Size(1075, 111);
             this.lsvSystemInfo.TabIndex = 1;
             this.lsvSystemInfo.TabStop = false;
             this.lsvSystemInfo.UseCompatibleStateImageBehavior = false;
             this.lsvSystemInfo.View = System.Windows.Forms.View.Details;
+            this.lsvSystemInfo.Visible = false;
             this.lsvSystemInfo.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lsvSystemInfo_ItemSelectionChanged);
             // 
             // hdrIcons1
             // 
             this.hdrIcons1.Text = "Icons";
-            this.hdrIcons1.Width = 32;
+            this.hdrIcons1.Width = 40;
             // 
             // hdrIcons2
             // 
-            this.hdrIcons2.Text = "OtherIcons";
-            this.hdrIcons2.Width = 90;
-            // 
-            // hdrBodies1
-            // 
-            this.hdrBodies1.Text = "Bodies";
-            this.hdrBodies1.Width = 100;
+            this.hdrIcons2.Width = 190;
             // 
             // hdrJumps1
             // 
             this.hdrJumps1.Text = "Jumps";
+            this.hdrJumps1.Width = 80;
             // 
             // hdrSystem1
             // 
@@ -133,6 +128,7 @@ namespace EDDiscoverBuddy
             this.lsvHighValuePlanets.TabStop = false;
             this.lsvHighValuePlanets.UseCompatibleStateImageBehavior = false;
             this.lsvHighValuePlanets.View = System.Windows.Forms.View.Details;
+            this.lsvHighValuePlanets.Visible = false;
             this.lsvHighValuePlanets.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.exListView2_ItemSelectionChanged);
             // 
             // excolumnHeader1
@@ -182,7 +178,6 @@ namespace EDDiscoverBuddy
         #endregion
         private System.Windows.Forms.Timer JourneyTimer;
         private EXListView lsvSystemInfo;
-        private ColumnHeader hdrBodies1;
         private ColumnHeader hdrJumps1;
         private ColumnHeader hdrSystem1;
         private EXListView lsvHighValuePlanets;
@@ -191,7 +186,7 @@ namespace EDDiscoverBuddy
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
         private ColumnHeader columnHeader4;
-        private ColumnHeader hdrIcons2;
         private EXColumnHeader hdrIcons1;
+        private ColumnHeader hdrIcons2;
     }
 }

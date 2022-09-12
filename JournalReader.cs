@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using EDDiscoverBuddy.EDJournal;
 using EDDiscoverBuddy.EDSM;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace EDDiscoverBuddy
 {
@@ -72,6 +73,7 @@ namespace EDDiscoverBuddy
                                         EDSystemInfo.CurrentSystem.LookupOnline = true;
                                         EDSystemInfo.BodyCount = 0;
                                         EDSystemInfo.Honked = false;
+                                        EDSystemInfo.FullyScanned = false;
                                         EDSystemInfo.CurrentSystem.Bodies.Clear();
                                     }
                                 }
@@ -149,44 +151,49 @@ namespace EDDiscoverBuddy
                 newLastEntry = LogEntry;
             }
             LastLogEntry = newLastEntry;
-            CheckIfEDIsRunning(ref EDSystemInfo);
-            if (EDSystemInfo.CurrentSystem.LookupOnline)
+            if (!ProcessAll)
             {
-                EDSystemInfo.OnlineLookUps++;
-                string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.CurrentSystem.StarSystem, EDSystemInfo.CurrentSystem.SystemAddress);
-                
-                EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
-                EDSystemInfo.CurrentSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);
-                if (OnlineBodies!= null && OnlineBodies.bodies != null)
+                CheckIfEDIsRunning(ref EDSystemInfo);
+                if (EDSystemInfo.EDRunning)
                 {
-                    foreach (Body body in OnlineBodies.bodies )
+                    if (EDSystemInfo.CurrentSystem.LookupOnline)
                     {
-                        EDSystemInfo.CurrentSystem.AddBody(OnlineBodies.name, OnlineBodies.id64, body.name
-                            , body.bodyId, body.subType, body.distanceToArrival, body.type == "star"
-                            , false, body.discovery!=null, true, body.type=="Star"?body.solarMasses: body.earthMasses, body.terraformingState);
-                    }
-                }
-                EDSystemInfo.CurrentSystem.LookupOnline = false;
-            }
-            if (EDSystemInfo.NextSystem.LookupOnline)
-            {
-                EDSystemInfo.OnlineLookUps++;
-                string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.NextSystem.StarSystem, EDSystemInfo.NextSystem.SystemAddress);
-                
-                EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
-                EDSystemInfo.NextSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);
-                if (OnlineBodies != null && OnlineBodies.bodies!=null)
-                {
-                    foreach (Body body in OnlineBodies.bodies)
-                    {
-                        EDSystemInfo.NextSystem.AddBody(OnlineBodies.name, OnlineBodies.id64, body.name
-                            , body.bodyId, body.subType, body.distanceToArrival, body.type == "star"
-                            , false, body.discovery != null, true, body.type == "Star" ? body.solarMasses : body.earthMasses, body.terraformingState);
-                    }
-                }
-                EDSystemInfo.NextSystem.LookupOnline = false;
-            }
+                        EDSystemInfo.OnlineLookUps++;
+                        string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.CurrentSystem.StarSystem, EDSystemInfo.CurrentSystem.SystemAddress);
 
+                        EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
+                        EDSystemInfo.CurrentSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);
+                        if (OnlineBodies != null && OnlineBodies.bodies != null)
+                        {
+                            foreach (Body body in OnlineBodies.bodies)
+                            {
+                                EDSystemInfo.CurrentSystem.AddBody(OnlineBodies.name, OnlineBodies.id64, body.name
+                                    , body.bodyId, body.subType, body.distanceToArrival, body.type == "star"
+                                    , false, body.discovery != null, true, body.type == "Star" ? body.solarMasses : body.earthMasses, body.terraformingState);
+                            }
+                        }
+                        EDSystemInfo.CurrentSystem.LookupOnline = false;
+                    }
+                    if (EDSystemInfo.NextSystem.LookupOnline)
+                    {
+                        EDSystemInfo.OnlineLookUps++;
+                        string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.NextSystem.StarSystem, EDSystemInfo.NextSystem.SystemAddress);
+
+                        EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
+                        EDSystemInfo.NextSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);
+                        if (OnlineBodies != null && OnlineBodies.bodies != null)
+                        {
+                            foreach (Body body in OnlineBodies.bodies)
+                            {
+                                EDSystemInfo.NextSystem.AddBody(OnlineBodies.name, OnlineBodies.id64, body.name
+                                    , body.bodyId, body.subType, body.distanceToArrival, body.type == "star"
+                                    , false, body.discovery != null, true, body.type == "Star" ? body.solarMasses : body.earthMasses, body.terraformingState);
+                            }
+                        }
+                        EDSystemInfo.NextSystem.LookupOnline = false;
+                    }
+                }
+            }
         }
 
         private void CheckIfEDIsRunning(ref cEDSystemInfo EDSystemInfo)
@@ -245,13 +252,13 @@ namespace EDDiscoverBuddy
             string[] JournalFiles = Directory.GetFiles(ElitePath, JournalFilter);
 
             //Read all journal files or only last one(s)
-            string allText = "";
-            JournalFiles.Where(W => W.CompareTo(CurrentJournalFile) >= 0 || CurrentJournalFile == "")
-                .OrderBy(o => o).ToList().ForEach(f => allText += ReadJournal(f));
-
             //Process all Journal files data
-            ProcessLogFile(ref EDSystemInfo, allText, CatchUp);
-            
+            foreach (string f in JournalFiles.Where(W => W.CompareTo(CurrentJournalFile) >= 0 || CurrentJournalFile == "")
+            .OrderBy(o => o).ToList())
+            {
+                ProcessLogFile(ref EDSystemInfo, ReadJournal(f), CatchUp);
+            }
+
             //Get last Journal file for next run
             CurrentJournalFile = JournalFiles.Where(W => W.CompareTo(CurrentJournalFile) >= 0 || CurrentJournalFile == "").OrderBy(o => o).LastOrDefault("");
         }
