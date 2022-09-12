@@ -1,6 +1,6 @@
 ﻿using EXControls;
 
-namespace EDScoutBuddy
+namespace EDDiscoverBuddy
 {
     partial class Form1
     {
@@ -31,7 +31,7 @@ namespace EDScoutBuddy
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Icons",
             "Position",
             "Distance",
@@ -124,7 +124,7 @@ namespace EDScoutBuddy
             this.lsvHighValuePlanets.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lsvHighValuePlanets.HideSelection = true;
             this.lsvHighValuePlanets.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.lsvHighValuePlanets.Location = new System.Drawing.Point(12, 149);
             this.lsvHighValuePlanets.Name = "lsvHighValuePlanets";
             this.lsvHighValuePlanets.OwnerDraw = true;
@@ -172,7 +172,7 @@ namespace EDScoutBuddy
             this.Location = new System.Drawing.Point(0, 250);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
+            this.Text = "E:D Discover Buddy";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ResumeLayout(false);

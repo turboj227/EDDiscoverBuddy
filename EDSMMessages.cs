@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace EDScoutBuddy.EDSM
+namespace EDDiscoverBuddy.EDSM
 {
     public static class EDSMHelper
     {
