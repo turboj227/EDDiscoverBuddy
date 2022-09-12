@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.Design.AxImporter;
 
-namespace EDScoutBuddy
+namespace EDDiscoverBuddy
 {
     internal class cEDSystemInfo
     {

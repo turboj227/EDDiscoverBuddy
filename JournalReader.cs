@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using EDScoutBuddy.EDJournal;
-using EDScoutBuddy.EDSM;
+using EDDiscoverBuddy.EDJournal;
+using EDDiscoverBuddy.EDSM;
 using System.Windows.Forms;
 
-namespace EDScoutBuddy
+namespace EDDiscoverBuddy
 {
     internal class cJournalReader
     {
@@ -153,7 +153,7 @@ namespace EDScoutBuddy
             if (EDSystemInfo.CurrentSystem.LookupOnline)
             {
                 EDSystemInfo.OnlineLookUps++;
-                string result = EDScoutBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.CurrentSystem.StarSystem, EDSystemInfo.CurrentSystem.SystemAddress);
+                string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.CurrentSystem.StarSystem, EDSystemInfo.CurrentSystem.SystemAddress);
                 
                 EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
                 EDSystemInfo.CurrentSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);
@@ -171,7 +171,7 @@ namespace EDScoutBuddy
             if (EDSystemInfo.NextSystem.LookupOnline)
             {
                 EDSystemInfo.OnlineLookUps++;
-                string result = EDScoutBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.NextSystem.StarSystem, EDSystemInfo.NextSystem.SystemAddress);
+                string result = EDDiscoverBuddy.EDSM.EDSMHelper.GetBodies(EDSystemInfo.NextSystem.StarSystem, EDSystemInfo.NextSystem.SystemAddress);
                 
                 EDSMBodies? OnlineBodies = JsonConvert.DeserializeObject<EDSMBodies>(result);
                 EDSystemInfo.NextSystem.WasDiscoveredOnline = (OnlineBodies != null && OnlineBodies.name != null);

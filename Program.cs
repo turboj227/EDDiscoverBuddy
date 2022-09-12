@@ -1,4 +1,4 @@
-namespace EDScoutBuddy
+namespace EDDiscoverBuddy
 {
     internal static class Program
     {

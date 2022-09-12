@@ -3,7 +3,7 @@ using System.Collections;
 using System.Reflection.Emit;
 using System.Windows.Forms;
 
-namespace EDScoutBuddy
+namespace EDDiscoverBuddy
 {
     public partial class Form1 : Form
     {
