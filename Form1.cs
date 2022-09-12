@@ -1,5 +1,6 @@
 using EXControls;
 using System.Collections;
+using System.Globalization;
 using System.Reflection.Emit;
 using System.Windows.Forms;
 
@@ -36,26 +37,33 @@ namespace EDDiscoverBuddy
             {
                 if (EDSystemInfo.Jumping)
                 {
-                    //label1.Text = "Jumping to:" + EDSystemInfo.NextSystem.StarSystem + "\nCan Refuel:" + EDSystemInfo.NextSystem.CanRefuel + "\nDiscovered:" + EDSystemInfo.NextSystem.WasDiscoveredOnline + "\nOnline lookups:" + EDSystemInfo.OnlineLookUps;
                     lsvHighValuePlanets.Visible = false;
                     lsvSystemInfo.BeginUpdate();
                     lsvSystemInfo.Visible = true;
                     lsvSystemInfo.Items.Clear();
                     EXImageListViewItem lviSystemInfo = new EXImageListViewItem();
-                    lviSystemInfo.MyImage = Image.FromFile("Icons/FirstDiscovery_" + (EDSystemInfo.NextSystem.WasDiscoveredOnline ? "disabled" : "enabled") + ".png");
-                    EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
-                    ArrayList images = new ArrayList(new object[]
-                              {Image.FromFile("Icons/Refuel_"+(EDSystemInfo.NextSystem.CanRefuel?"enabled":"disabled")+".png") });
-                    subIcons.MyImages = images;
-                    lviSystemInfo.SubItems.Add(subIcons);
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
 
-                    lviSystemInfo.SubItems[2].Text = "Jumping";
-                    lviSystemInfo.SubItems[3].Text = " to";
-                    lviSystemInfo.SubItems[4].Text = EDSystemInfo.NextSystem.StarSystem;
+                    ArrayList images = new ArrayList();
+                    if (!EDSystemInfo.NextSystem.WasDiscoveredOnline)
+                        images.Add(Image.FromFile("Icons/FirstDiscovery.png"));
+                    if (EDSystemInfo.NextSystem.CanRefuel)
+                        images.Add(Image.FromFile("Icons/Refuel.png"));
+
+                    if (images.Count > 0)
+                    {
+                        lviSystemInfo.MyImage = (Image)images[0];
+                        images.RemoveAt(0);
+                    }
+
+                    EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
+                    if (images.Count > 0)
+                        subIcons.MyImages = images;
+                    lviSystemInfo.SubItems.Add(subIcons);
+
+                    subIcons.Text = "Jumping to " + EDSystemInfo.NextSystem.StarSystem;
                     lsvSystemInfo.Items.Add(lviSystemInfo);
+                    lsvSystemInfo.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+                    lsvSystemInfo.Columns[1].Width += images.Count * 40;
                     lsvSystemInfo.EndUpdate();
                 }
                 else
@@ -64,21 +72,37 @@ namespace EDDiscoverBuddy
                     lsvSystemInfo.Visible = true;
                     lsvSystemInfo.Items.Clear();
                     EXImageListViewItem lviSystemInfo = new EXImageListViewItem();
-                    lviSystemInfo.MyImage = Image.FromFile("Icons/FirstDiscovery_" + (EDSystemInfo.CurrentSystem.WasDiscoveredOnline ? "disabled" : "enabled") + ".png");
-                    EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
-                    ArrayList images = new ArrayList(new object[]
-                              {Image.FromFile("Icons/Refuel_"+(EDSystemInfo.CurrentSystem.CanRefuel?"enabled":"disabled")+".png"),
-                        Image.FromFile("Icons/Honk_"+(EDSystemInfo.Honked?"disabled":"enabled")+".png")});
-                    subIcons.MyImages = images;
-                    lviSystemInfo.SubItems.Add(subIcons);
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
-                    lviSystemInfo.SubItems.Add(new EXListViewSubItem());
+                    ArrayList images = new ArrayList();
+                    if (!EDSystemInfo.CurrentSystem.WasDiscoveredOnline)
+                        images.Add(Image.FromFile("Icons/FirstDiscovery.png"));
+                    if (EDSystemInfo.CurrentSystem.CanRefuel)
+                        images.Add(Image.FromFile("Icons/Refuel.png"));
+                    if (!EDSystemInfo.Honked)
+                        images.Add(Image.FromFile("Icons/Honk.png"));
+                    if (EDSystemInfo.FullyScanned)
+                        images.Add(Image.FromFile("Icons/FoundAll.png"));
 
-                    lviSystemInfo.SubItems[2].Text = EDSystemInfo.CurrentSystem.Bodies.Count + "/" + EDSystemInfo.BodyCount;
-                    lviSystemInfo.SubItems[3].Text = EDSystemInfo.RemainingJumps.ToString();
-                    lviSystemInfo.SubItems[4].Text = EDSystemInfo.CurrentSystem.StarSystem;
+                    if (images.Count > 0)
+                    {
+                        lviSystemInfo.MyImage = (Image)images[0];
+                        images.RemoveAt(0);
+                    }
+                    EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
+                    if (images.Count>0)
+                        subIcons.MyImages = images;
+                    subIcons.Text = EDSystemInfo.CurrentSystem.Bodies.Count + "/" + EDSystemInfo.BodyCount;
+                    lviSystemInfo.SubItems.Add(subIcons);
+                    EXImageListViewSubItem Jumps = new EXImageListViewSubItem();
+                    lviSystemInfo.SubItems.Add(Jumps);
+                    EXListViewSubItem currentSystem = new EXListViewSubItem();
+                    lviSystemInfo.SubItems.Add(currentSystem);
+
+                    Jumps.MyImage = Image.FromFile("Icons/Jumps.png");
+                    Jumps.Text = EDSystemInfo.RemainingJumps.ToString();
+                    currentSystem.Text = EDSystemInfo.CurrentSystem.StarSystem;
                     lsvSystemInfo.Items.Add(lviSystemInfo);
+                    lsvSystemInfo.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+                    lsvSystemInfo.Columns[1].Width += images.Count * 40;
                     lsvSystemInfo.EndUpdate();
 
                     lsvHighValuePlanets.BeginUpdate();
@@ -104,10 +128,12 @@ namespace EDDiscoverBuddy
 
         private void AddValuablePlanet(cPlanetBody b)
         {
-            EXImageListViewItem lviValuable = new EXImageListViewItem(Image.FromFile("Icons/FirstDiscovery_" + (b.WasDiscovered ? "disabled" : "enabled") + ".png"));
+            EXImageListViewItem lviValuable = new EXImageListViewItem();
+            if (!b.WasDiscovered)
+                lviValuable.MyImage = Image.FromFile("Icons/FirstDiscovery.png");
             lviValuable.SubItems.Add(new EXListViewSubItem(b.BodyName.Replace(b.StarSystem, "").Trim()));
             lviValuable.SubItems.Add(new EXListViewSubItem(((int)b.DistanceFromArrivalLS).ToString()));
-            lviValuable.SubItems.Add(new EXListViewSubItem(b.MappedValue.ToString("0,000,000")));
+            lviValuable.SubItems.Add(new EXListViewSubItem(b.MappedValue.ToString("N", CultureInfo.CreateSpecificCulture("en-US")).Substring(0, b.MappedValue.ToString("N", CultureInfo.CreateSpecificCulture("en-US")).Length - 3)));
             lviValuable.SubItems.Add(new EXListViewSubItem(b.Type));
             lsvHighValuePlanets.Items.Add(lviValuable);
             lsvHighValuePlanets.Visible = true;

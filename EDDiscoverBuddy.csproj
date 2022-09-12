@@ -18,22 +18,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Icons\FirstDiscovery_Disabled.png">
+    <None Update="Icons\FirstDiscovery.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\FirstDiscovery_Enabled.png">
+    <None Update="Icons\FoundAll.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Honk_Disabled.png">
+    <None Update="Icons\Honk.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Honk_Enabled.png">
+    <None Update="Icons\Jumps.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Refuel_Disabled.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Icons\Refuel_Enabled.png">
+    <None Update="Icons\Refuel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
