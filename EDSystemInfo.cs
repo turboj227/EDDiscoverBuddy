@@ -53,6 +53,7 @@ namespace EDDiscoverBuddy
             cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == StarSystem && a.SystemAddress == SystemAddress && a.BodyName == bodyName);
             if (body!=null)
             {
+                body.WasMappedByMe = true;
                 body.WasMapped = true;
                 body.WasMappedEfficient = mappedEfficient;
             }
@@ -76,9 +77,11 @@ namespace EDDiscoverBuddy
         internal bool WasMappedEfficient;
         public float MassEM;
         public string TerraformState;
+        public bool WasMappedByMe;
 
         public cPlanetBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type, float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline, float massEM, string terraformState)
         {
+            WasMappedByMe = false;
             update(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar, wasMapped, wasDiscovered, fromOnline, massEM, terraformState);
         }
         public void update(string starSystem, long systemAddress, string bodyName, int? bodyID, string type, float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline, float massEM, string terraformState)

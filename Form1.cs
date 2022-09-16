@@ -110,7 +110,7 @@ namespace EDDiscoverBuddy
                     {
                         lsvHighValuePlanets.Items.RemoveAt(1);
                     }
-                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MappedValue >= 500000 && !a.WasMapped).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
+                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MappedValue >= 500000 && !a.WasMappedByMe).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
                     if (lsvHighValuePlanets.Items.Count == 1)
                         lsvHighValuePlanets.Visible = false;
                     else
