@@ -90,7 +90,7 @@ namespace EDDiscoverBuddy
                     EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
                     if (images.Count>0)
                         subIcons.MyImages = images;
-                    subIcons.Text = EDSystemInfo.CurrentSystem.Bodies.Count + "/" + EDSystemInfo.BodyCount;
+                    subIcons.Text = EDSystemInfo.CurrentSystem.Bodies.Count(a => !a.FromOnline) + "/" + EDSystemInfo.BodyCount;
                     lviSystemInfo.SubItems.Add(subIcons);
                     EXImageListViewSubItem Jumps = new EXImageListViewSubItem();
                     lviSystemInfo.SubItems.Add(Jumps);

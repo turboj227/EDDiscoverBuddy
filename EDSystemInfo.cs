@@ -32,24 +32,25 @@ namespace EDDiscoverBuddy
         public bool LookupOnline;
         public List<cPlanetBody> Bodies = new List<cPlanetBody>();
 
-        internal void AddBody(string starSystem, long systemAddress, string bodyName, int bodyID, string type
+        internal void AddBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type
             , float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline
             , float massEM, string terraformState)
         {
             //Check if Body exists
-            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == starSystem && a.SystemAddress == systemAddress && a.BodyName == bodyName && a.BodyID == bodyID);
-            if (body==null)
+            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == starSystem && a.SystemAddress == systemAddress && a.BodyName == bodyName && (a.BodyID == bodyID || a.BodyID==null || bodyID==null));
+            if (body == null)
             {
                 body = new cPlanetBody(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar
                     , wasMapped, wasDiscovered, fromOnline, massEM, terraformState);
                 Bodies.Add(body);
             }
-            body.CalcValue();
+            else if (!fromOnline)
+                body.update(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar, wasMapped, wasDiscovered, fromOnline, massEM, terraformState);
         }
 
         internal void PlanetMapped(string bodyName, int bodyID, bool mappedEfficient)
         {
-            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == StarSystem && a.SystemAddress == SystemAddress && a.BodyName == bodyName && a.BodyID == bodyID);
+            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == StarSystem && a.SystemAddress == SystemAddress && a.BodyName == bodyName);
             if (body!=null)
             {
                 body.WasMapped = true;
@@ -63,20 +64,24 @@ namespace EDDiscoverBuddy
         public string StarSystem = "";
         internal long SystemAddress;
         public string BodyName = "";
-        public int BodyID;
+        public int? BodyID;
         public string Position = "";
         public string Type = "";
         public float DistanceFromArrivalLS;
         public bool IsStar;
         public bool WasMapped;
         public bool WasDiscovered;
-        private bool FromOnline;
+        public bool FromOnline;
         public int MappedValue;
         internal bool WasMappedEfficient;
         public float MassEM;
         public string TerraformState;
 
-        public cPlanetBody(string starSystem, long systemAddress, string bodyName, int bodyID, string type, float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline, float massEM, string terraformState)
+        public cPlanetBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type, float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline, float massEM, string terraformState)
+        {
+            update(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar, wasMapped, wasDiscovered, fromOnline, massEM, terraformState);
+        }
+        public void update(string starSystem, long systemAddress, string bodyName, int? bodyID, string type, float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline, float massEM, string terraformState)
         {
             StarSystem = starSystem;
             SystemAddress = systemAddress;
@@ -90,8 +95,9 @@ namespace EDDiscoverBuddy
             FromOnline = fromOnline;
             MassEM = massEM;
             TerraformState = terraformState;
-        }
 
+            CalcValue();
+        }
         internal void CalcValue()
         {
 
