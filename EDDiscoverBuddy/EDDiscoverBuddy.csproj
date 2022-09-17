@@ -16,29 +16,34 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Icons\FirstDiscovery.png" />
+    <None Remove="Icons\FoundAll.png" />
+    <None Remove="Icons\Honk.png" />
+    <None Remove="Icons\Jumps.png" />
+    <None Remove="Icons\Refuel.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icons\FirstDiscovery.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\FoundAll.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\Honk.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\Jumps.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\Refuel.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="idea_6_.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Icons\FirstDiscovery.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Icons\FoundAll.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Icons\Honk.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Icons\Jumps.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Icons\Refuel.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
