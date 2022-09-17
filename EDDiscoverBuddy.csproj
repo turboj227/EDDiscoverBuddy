@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="published\**" />
+    <EmbeddedResource Remove="published\**" />
+    <None Remove="published\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="idea_6_.ico" />
   </ItemGroup>
 
