@@ -11,6 +11,10 @@ namespace EDDiscoverBuddy
 {
     internal class cEDSystemInfo
     {
+        public string CommanderName = "";
+        public int NewDiscoveries = 0;
+        public int SurfaceScans = 0;
+        public int OtherPlanetValues = 0;
         public int OnlineLookUps = 0;
         public bool Jumping = false;
         public bool Honked = false;
@@ -20,7 +24,7 @@ namespace EDDiscoverBuddy
         public bool EDRunning = false;
         public cEDSystem CurrentSystem = new cEDSystem();
         public cEDSystem NextSystem = new cEDSystem();
-        
+        public cEDSystem TargetSystem = new cEDSystem();
     }
     internal class cEDSystem
     {
@@ -32,7 +36,7 @@ namespace EDDiscoverBuddy
         public bool LookupOnline;
         public List<cPlanetBody> Bodies = new List<cPlanetBody>();
 
-        internal void AddBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type
+        internal cPlanetBody AddBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type
             , float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline
             , float massEM, string terraformState)
         {
@@ -46,6 +50,7 @@ namespace EDDiscoverBuddy
             }
             else if (!fromOnline)
                 body.update(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar, wasMapped, wasDiscovered, fromOnline, massEM, terraformState);
+            return body;
         }
 
         internal void PlanetMapped(string bodyName, int bodyID, bool mappedEfficient)
@@ -56,7 +61,13 @@ namespace EDDiscoverBuddy
                 body.WasMappedByMe = true;
                 body.WasMapped = true;
                 body.WasMappedEfficient = mappedEfficient;
+                body.CalcValue();
             }
+        }
+
+        public int GetAllPlanetValues()
+        {
+            return Bodies.Sum(A => A.CurrentMappedValue);
         }
     }
 
@@ -73,7 +84,8 @@ namespace EDDiscoverBuddy
         public bool WasMapped;
         public bool WasDiscovered;
         public bool FromOnline;
-        public int MappedValue;
+        public int MaxedMappedValue = 0;
+        public int CurrentMappedValue = 0;
         internal bool WasMappedEfficient;
         public float MassEM;
         public string TerraformState;
@@ -98,8 +110,8 @@ namespace EDDiscoverBuddy
             FromOnline = fromOnline;
             MassEM = massEM;
             TerraformState = terraformState;
-
-            CalcValue();
+            if (!fromOnline)
+                CalcValue();
         }
         internal void CalcValue()
         {
@@ -116,12 +128,18 @@ namespace EDDiscoverBuddy
             }
 
             CalcOptions options = new CalcOptions();
+            options.EfficiencyBonus = true;
+            options.IsMapped = true;
             options.IsFirstDiscoverer = !WasDiscovered;
             options.IsFirstMapper = !WasMapped;
 
-            MappedValue = CalcEstimatedValue(IsStar, Type, MassEM, terraform_state, options);
+            MaxedMappedValue = CalcEstimatedValue(IsStar, Type, MassEM, terraform_state, options);
 
-         }
+            options.EfficiencyBonus = WasMappedEfficient;
+            options.IsMapped = WasMappedByMe;
+            CurrentMappedValue = CalcEstimatedValue(IsStar, Type, MassEM, terraform_state, options);
+
+        }
 
         private int CalcEstimatedValue(bool isStar, string specific_type, float mass, int terraform_state, CalcOptions options)
         {

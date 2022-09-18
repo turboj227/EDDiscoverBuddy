@@ -2,7 +2,7 @@
 
 namespace EDDiscoverBuddy
 {
-    partial class Form1
+    partial class frmEDOverlay
     {
         /// <summary>
         ///  Required designer variable.
@@ -156,7 +156,7 @@ namespace EDDiscoverBuddy
             this.columnHeader4.Text = "Type";
             this.columnHeader4.Width = 550;
             // 
-            // Form1
+            // frmEDOverlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -166,7 +166,8 @@ namespace EDDiscoverBuddy
             this.Controls.Add(this.lsvSystemInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Location = new System.Drawing.Point(0, 250);
-            this.Name = "Form1";
+            this.Name = "frmEDOverlay";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "E:D Discover Buddy";
             this.TopMost = true;
