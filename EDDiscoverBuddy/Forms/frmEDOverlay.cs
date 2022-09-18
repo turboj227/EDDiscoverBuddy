@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace EDDiscoverBuddy
 {
-    public partial class Form1 : Form
+    public partial class frmEDOverlay : Form
     {
         private int m_Ticks = 0;
         private cJournalReader m_JournalReader = new cJournalReader();
         private cEDSystemInfo EDSystemInfo = new cEDSystemInfo();
-
+        public frmStatus frmStatus;
         private cJournalReader JournalReader
         {
             get { return m_JournalReader; }
@@ -24,15 +24,17 @@ namespace EDDiscoverBuddy
             set { m_Ticks = value; }
         }
 
-        public Form1()
+        public frmEDOverlay(frmStatus frmStatus)
         {
             InitializeComponent();
+            this.frmStatus = frmStatus;
             JournalReader.ReadAllEntries(ref EDSystemInfo, true);
             JourneyTimer.Start();
         }
         private void JourneyTimer_Tick(object sender, EventArgs e)
         {
             JournalReader.ReadAllEntries(ref EDSystemInfo, false);
+            frmStatus.UpdateInfo(EDSystemInfo);
             if (EDSystemInfo.EDRunning)
             {
                 if (EDSystemInfo.Jumping)
@@ -51,7 +53,7 @@ namespace EDDiscoverBuddy
 
                     if (images.Count > 0)
                     {
-                        lviSystemInfo.MyImage = (Image)images[0];
+                        lviSystemInfo.MyImage = images[0] as Image;
                         images.RemoveAt(0);
                     }
 
@@ -84,7 +86,7 @@ namespace EDDiscoverBuddy
 
                     if (images.Count > 0)
                     {
-                        lviSystemInfo.MyImage = (Image)images[0];
+                        lviSystemInfo.MyImage = images[0] as Image;
                         images.RemoveAt(0);
                     }
                     EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
@@ -110,7 +112,7 @@ namespace EDDiscoverBuddy
                     {
                         lsvHighValuePlanets.Items.RemoveAt(1);
                     }
-                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MappedValue >= 500000 && !a.WasMappedByMe).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
+                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MaxedMappedValue >= 500000 && !a.WasMappedByMe).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
                     if (lsvHighValuePlanets.Items.Count == 1)
                         lsvHighValuePlanets.Visible = false;
                     else
@@ -133,7 +135,8 @@ namespace EDDiscoverBuddy
                 lviValuable.MyImage = Image.FromFile("Icons/FirstDiscovery.png");
             lviValuable.SubItems.Add(new EXListViewSubItem(b.BodyName.Replace(b.StarSystem, "").Trim()));
             lviValuable.SubItems.Add(new EXListViewSubItem(((int)b.DistanceFromArrivalLS).ToString()));
-            lviValuable.SubItems.Add(new EXListViewSubItem(b.MappedValue.ToString("N", CultureInfo.CreateSpecificCulture("en-US")).Substring(0, b.MappedValue.ToString("N", CultureInfo.CreateSpecificCulture("en-US")).Length - 3)));
+            string MappedValue = b.MaxedMappedValue.ToString("N", CultureInfo.CreateSpecificCulture("en-US"));
+            lviValuable.SubItems.Add(new EXListViewSubItem(MappedValue.Substring(0, MappedValue.Length - 3)));
             lviValuable.SubItems.Add(new EXListViewSubItem(b.Type));
             lsvHighValuePlanets.Items.Add(lviValuable);
             lsvHighValuePlanets.Visible = true;

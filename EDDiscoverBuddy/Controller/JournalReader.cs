@@ -47,7 +47,7 @@ namespace EDDiscoverBuddy
                         //check event
                         switch (Event.@event)
                         {
-                            case "FSDTarget": //Arrive in new System
+                            case "FSDTarget":           //Arrive in new System
                                 {
                                     JournalFSDTarget? FSDTarget = JsonConvert.DeserializeObject<JournalFSDTarget>(LogEntry);
                                     if (FSDTarget != null)
@@ -57,15 +57,24 @@ namespace EDDiscoverBuddy
                                         /*EDSystemInfo.Honked = false;
                                         EDSystemInfo.BodyCount = 0;
                                         EDSystemInfo.FullyScanned = false;*/
+                                        EDSystemInfo.TargetSystem.StarSystem = FSDTarget.Name;
+                                        EDSystemInfo.TargetSystem.SystemAddress = FSDTarget.SystemAddress;
+                                        EDSystemInfo.TargetSystem.StarClass = FSDTarget.StarClass;
+                                        EDSystemInfo.TargetSystem.WasDiscoveredOnline = false; //On EDDN
+                                        EDSystemInfo.TargetSystem.CanRefuel = FSDTarget.StarClass.In("K", "G", "B", "F", "O", "A", "M");
+                                        EDSystemInfo.TargetSystem.LookupOnline = false;
+                                        EDSystemInfo.TargetSystem.Bodies.Clear();
                                     }
                                 }
                                 break;
-                            case "FSDJump":         //Jump Completed
+                            case "FSDJump":             //Jump Completed
                                 {
                                     JournalFSDJump? FSDJump = JsonConvert.DeserializeObject<JournalFSDJump>(LogEntry);
                                     if (FSDJump != null)
                                     {
                                         EDSystemInfo.Jumping = false;
+                                        if (!ProcessAll)
+                                            EDSystemInfo.OtherPlanetValues += EDSystemInfo.CurrentSystem.GetAllPlanetValues();
                                         EDSystemInfo.CurrentSystem.StarSystem = FSDJump.StarSystem;
                                         EDSystemInfo.CurrentSystem.SystemAddress = FSDJump.SystemAddress;
                                         EDSystemInfo.CurrentSystem.StarClass = EDSystemInfo.NextSystem.StarClass;
@@ -96,9 +105,14 @@ namespace EDDiscoverBuddy
                                     {
                                         if (Scan.StarType != null || Scan.PlanetClass != null)
                                         {//Found body or star
-                                            EDSystemInfo.CurrentSystem.AddBody(Scan.StarSystem, Scan.SystemAddress, Scan.BodyName
+                                            cPlanetBody p = EDSystemInfo.CurrentSystem.AddBody(Scan.StarSystem, Scan.SystemAddress, Scan.BodyName
                                                 , Scan.BodyID, Scan.PlanetClass != null ? Scan.PlanetClass : Scan.StarType, Scan.DistanceFromArrivalLS, Scan.StarType != null
                                                 , Scan.WasMapped, Scan.WasDiscovered, false, Scan.MassEM, Scan.TerraformState);
+                                            if (!ProcessAll)
+                                            {
+                                                if (!Scan.WasDiscovered)
+                                                    EDSystemInfo.NewDiscoveries++;
+                                            }
                                         }
                                     }
                                 }
@@ -131,12 +145,23 @@ namespace EDDiscoverBuddy
                                     }
                                 }
                                 break;
-                            case "SAAScanComplete":         //Planet Mapped
+                            case "SAAScanComplete":     //Planet Mapped
                                 {
                                     JournalSAAScanComplete? SAAScanComplete = JsonConvert.DeserializeObject<JournalSAAScanComplete>(LogEntry);
                                     if (SAAScanComplete != null)
                                     {
                                         EDSystemInfo.CurrentSystem.PlanetMapped(SAAScanComplete.BodyName, SAAScanComplete.BodyID, SAAScanComplete.ProbesUsed <= SAAScanComplete.EfficiencyTarget);
+                                        if (!ProcessAll)
+                                            EDSystemInfo.SurfaceScans++;
+                                    }
+                                }
+                                break;
+                            case "LoadGame":            //LoadGame
+                                {
+                                    JournalLoadGame? LoadGame = JsonConvert.DeserializeObject<JournalLoadGame>(LogEntry);
+                                    if (LoadGame != null)
+                                    {
+                                        EDSystemInfo.CommanderName = LoadGame.Commander;
                                     }
                                 }
                                 break;

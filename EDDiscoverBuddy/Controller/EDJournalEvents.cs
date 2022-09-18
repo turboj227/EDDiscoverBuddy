@@ -14,8 +14,8 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalFSDJump
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         /*public bool Taxi { get; set; }
         public bool Multicrew { get; set; }*/
         public string StarSystem { get; set; }
@@ -41,22 +41,23 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalFSSDiscoveryScan
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         public float Progress { get; set; }
         public int BodyCount { get; set; }
-        public int NonBodyCount { get; set; }
-        public string SystemName { get; set; }
-        public long SystemAddress { get; set; }
+        //public int NonBodyCount { get; set; }
+        //public string SystemName { get; set; }
+        //public long SystemAddress { get; set; }
     }
 
-
+    /*
     public class Parent
     {
         public int Ring { get; set; }
         public int Star { get; set; }
     }
-
+    */
+    /*
     public class Ring
     {
         public string Name { get; set; }
@@ -65,15 +66,15 @@ namespace EDDiscoverBuddy.EDJournal
         public float InnerRad { get; set; }
         public float OuterRad { get; set; }
     }
-
+    */
     public class JournalScan
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
-        public string ScanType { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
+        //public string ScanType { get; set; }
         public string BodyName { get; set; }
         public int BodyID { get; set; }
-        public Parent[] Parents { get; set; }
+        //public Parent[] Parents { get; set; }
         public string StarSystem { get; set; }
         public long SystemAddress { get; set; }
         public float DistanceFromArrivalLS { get; set; }
@@ -89,7 +90,7 @@ namespace EDDiscoverBuddy.EDJournal
         public float SurfaceGravity { get; set; }
         public float SurfaceTemperature { get; set; }
         public float SurfacePressure { get; set; }*/
-        public bool Landable { get; set; }
+        //public bool Landable { get; set; }
         /*public Composition Composition { get; set; }
         public float SemiMajorAxis { get; set; }
         public float Eccentricity { get; set; }
@@ -108,7 +109,7 @@ namespace EDDiscoverBuddy.EDJournal
         public float AbsoluteMagnitude { get; set; }
         public int Age_MY { get; set; }
         public string Luminosity { get; set; }*/
-        public Ring[] Rings { get; set; }
+        //public Ring[] Rings { get; set; }
     }
 
     /*public class Composition
@@ -126,17 +127,17 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalFSSAllBodiesFound
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
-        public string SystemName { get; set; }
-        public long SystemAddress { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
+        //public string SystemName { get; set; }
+        //public long SystemAddress { get; set; }
         public int Count { get; set; }
     }
 
     public class JournalFSDTarget
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         public string Name { get; set; }
         public long SystemAddress { get; set; }
         public string StarClass { get; set; }
@@ -145,8 +146,8 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalStartJump
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         public string JumpType { get; set; }
         public string StarSystem { get; set; }
         public long SystemAddress { get; set; }
@@ -155,10 +156,10 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalSAAScanComplete
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         public string BodyName { get; set; }
-        public long SystemAddress { get; set; }
+        //public long SystemAddress { get; set; }
         public int BodyID { get; set; }
         public int ProbesUsed { get; set; }
         public int EfficiencyTarget { get; set; }
@@ -166,9 +167,31 @@ namespace EDDiscoverBuddy.EDJournal
 
     public class JournalMusic
     {
-        public DateTime timestamp { get; set; }
-        public string _event { get; set; }
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
         public string MusicTrack { get; set; }
+    }
+
+    public class JournalLoadGame
+    {
+        //public DateTime timestamp { get; set; }
+        //public string _event { get; set; }
+        //public string FID { get; set; }
+        public string Commander { get; set; }
+        /*public bool Horizons { get; set; }
+        public bool Odyssey { get; set; }
+        public string Ship { get; set; }
+        public int ShipID { get; set; }
+        public string ShipName { get; set; }
+        public string ShipIdent { get; set; }
+        public float FuelLevel { get; set; }
+        public float FuelCapacity { get; set; }
+        public string GameMode { get; set; }
+        public long Credits { get; set; }
+        public int Loan { get; set; }
+        public string language { get; set; }
+        public string gameversion { get; set; }
+        public string build { get; set; }*/
     }
 
 }
