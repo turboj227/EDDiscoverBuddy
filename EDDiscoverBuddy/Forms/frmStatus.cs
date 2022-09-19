@@ -28,18 +28,24 @@ namespace EDDiscoverBuddy
         public frmStatus()
         {
             Text = "ED Discover Buddy";
-            PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
-
-            if (ClickOnce.IsNetworkDeployment)
+            try
             {
-                Task<Version> v = ClickOnce.CurrentVersion();
-                v.RunSynchronously();
-                Text += " - " + v.Result.ToString();
+                PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
 
+                if (ClickOnce.IsNetworkDeployment)
+                {
+                    Task<Version> v = ClickOnce.CurrentVersion();
+                    v.RunSynchronously();
+                    Text += " - " + v.Result.ToString();
+
+                }
+                else
+                    Text += " - Not NetworkPloyment";
             }
-            else
-                Text += " - Not NetworkPloyment";
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             InitializeComponent();
             EDOverlay = new frmEDOverlay(this);
         }
