@@ -10,6 +10,7 @@ Planet calculation from https://github.com/joncage/ed-scout
 Listview from https://www.codeproject.com/Articles/13006/Extended-ListView
 Planet and Star definition from https://github.com/EDSM-NET/FrontEnd
 Gets star system info from https://www.edsm.net/
+Get ClickOnce info with https://github.com/derskythe/WpfSettings
 
 Icons:
 https://www.flaticon.com/free-icon/gas-station_1000437?related_id=1000437&origin=search
