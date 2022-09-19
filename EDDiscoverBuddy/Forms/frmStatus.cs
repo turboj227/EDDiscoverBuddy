@@ -28,15 +28,20 @@ namespace EDDiscoverBuddy
         public frmStatus()
         {
             Text = "ED Discover Buddy";
+            GetInstalledVersion();
+            InitializeComponent();
+            EDOverlay = new frmEDOverlay(this);
+        }
+        private async void GetInstalledVersion()
+        {
             try
             {
                 PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
 
                 if (ClickOnce.IsNetworkDeployment)
                 {
-                    Task<Version> v = ClickOnce.CurrentVersion();
-                    v.RunSynchronously();
-                    Text += " - " + v.Result.ToString();
+                    Version v = await ClickOnce.CurrentVersion();
+                    Text += " - " + v.ToString();
 
                 }
                 else
@@ -46,10 +51,7 @@ namespace EDDiscoverBuddy
             {
                 MessageBox.Show(ex.Message);
             }
-            InitializeComponent();
-            EDOverlay = new frmEDOverlay(this);
         }
-
         private void frmStatus_Load(object sender, EventArgs e)
         {
             EDOverlay.Show();
