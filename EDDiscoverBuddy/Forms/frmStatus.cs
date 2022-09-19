@@ -33,7 +33,7 @@ namespace EDDiscoverBuddy
             if (ClickOnce.IsNetworkDeployment)
             {
                 Task<Version> v = ClickOnce.CurrentVersion();
-                v.Wait();
+                v.RunSynchronously();
                 Text += " - " + v.Result.ToString();
 
             }
