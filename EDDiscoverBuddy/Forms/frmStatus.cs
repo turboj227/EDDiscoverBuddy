@@ -27,6 +27,7 @@ namespace EDDiscoverBuddy
         frmEDOverlay EDOverlay;
         public frmStatus()
         {
+            Text = "ED Discover Buddy V1";
             /*PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
 
             Text = "ED Discover Buddy";
