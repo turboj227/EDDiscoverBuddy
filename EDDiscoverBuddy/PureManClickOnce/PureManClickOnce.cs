@@ -290,10 +290,12 @@ namespace PureManApplicationDeployment
                         await response.Content.CopyToAsync(fs);
                     }
                 }
+                MessageBox.Show("-1");
                 proc = OpenUrl(setupPath);
             }
             else if (_From == InstallFrom.Unc)
             {
+                MessageBox.Show("0");
                 proc = OpenUrl(Path.Combine($"{_PublishPath}", $"{_CurrentAppName}.application"));
             }
             else
@@ -303,9 +305,11 @@ namespace PureManApplicationDeployment
 
             if (proc == null)
             {
+                MessageBox.Show("-2");
                 throw new ClickOnceDeploymentException("Can't start update process");
             }
 
+            MessageBox.Show("-3");
             await proc.WaitForExitAsync();
             MessageBox.Show("1");
             if (!string.IsNullOrEmpty(setupPath))
