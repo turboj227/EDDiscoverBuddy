@@ -27,7 +27,7 @@ namespace EDDiscoverBuddy
         frmEDOverlay EDOverlay;
         public frmStatus()
         {
-            Text = "ED Discover Buddy T";
+            Text = "ED Discover Buddy";
             GetInstalledVersion();
             InitializeComponent();
             EDOverlay = new frmEDOverlay(this);
@@ -49,7 +49,7 @@ namespace EDDiscoverBuddy
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "ED Discover Buddy");
             }
         }
         private void frmStatus_Load(object sender, EventArgs e)
@@ -107,22 +107,22 @@ namespace EDDiscoverBuddy
                 PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
                 if (await ClickOnce.UpdateAvailable())
                 {
-                    if (MessageBox.Show("New update " + await ClickOnce.ServerVersion() + " available!\nDo you want to download it?", "New version", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("New update " + await ClickOnce.ServerVersion() + " available!\nDo you want to download it?", "ED Discover Buddy", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         if (!await ClickOnce.Update())
                         {
-                            MessageBox.Show("Failed to update new version!");
+                            MessageBox.Show("Failed to update new version!", "ED Discover Buddy");
                         }
                         else
                             Application.Restart();
                     }
                 }
                 else
-                    MessageBox.Show("No new update is available!");
+                    MessageBox.Show("No new update is available!", "ED Discover Buddy");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "ED Discover Buddy");
             }
 
         }
