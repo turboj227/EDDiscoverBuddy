@@ -106,7 +106,6 @@ namespace EDDiscoverBuddy
                 if (b)
                 {
                     EDOverlay.Close();
-                    MessageBox.Show("Restarting Application!");
                     Application.Exit();
                 }
             }
