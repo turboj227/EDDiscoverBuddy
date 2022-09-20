@@ -100,13 +100,13 @@ namespace EDDiscoverBuddy
         {
             try
             {
-                //Task<bool> b = 
-                //Task b = CheckForNewVersion();
-                bool b = Task.Run(async () => await CheckForNewVersion()).Result;
+                PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
+
+                bool b = Task.Run(async () => await ClickOnce.UpdateAvailable()).Result;
                 if (b)
                 {
                     EDOverlay.Close();
-                    Application.Exit();
+                    Application.Restart();
                 }
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace EDDiscoverBuddy
                 MessageBox.Show(ex.Message);
             }
         }
-        private async Task<bool> CheckForNewVersion()
+        /*private async Task<bool> CheckForNewVersion()
         {
             try
             {
@@ -139,6 +139,6 @@ namespace EDDiscoverBuddy
                 MessageBox.Show(ex.Message, "ED Discover Buddy");
             }
             return false;
-        }
+        }*/
     }
 }
