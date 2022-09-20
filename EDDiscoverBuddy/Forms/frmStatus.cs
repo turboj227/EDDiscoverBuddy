@@ -98,9 +98,21 @@ namespace EDDiscoverBuddy
 
         private void mnuCheckForUpdate_Click(object sender, EventArgs e)
         {
-            CheckForNewVersion();
+            try
+            {
+                Task<bool> b = CheckForNewVersion();
+                if (b.Result)
+                {
+                    MessageBox.Show("Restarting Application!");
+                    Application.Restart();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-        private async void CheckForNewVersion()
+        private async Task<bool> CheckForNewVersion()
         {
             try
             {
@@ -116,7 +128,7 @@ namespace EDDiscoverBuddy
                         else
                         {
                             MessageBox.Show("New version installed. Restarting Application", "ED Discover Buddy");
-                            Application.Restart();
+                            return true;
                         }
                     }
                 }
@@ -127,7 +139,7 @@ namespace EDDiscoverBuddy
             {
                 MessageBox.Show(ex.Message, "ED Discover Buddy");
             }
-
+            return false;
         }
     }
 }
