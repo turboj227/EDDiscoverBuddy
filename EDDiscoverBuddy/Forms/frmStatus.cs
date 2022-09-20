@@ -27,7 +27,7 @@ namespace EDDiscoverBuddy
         frmEDOverlay EDOverlay;
         public frmStatus()
         {
-            Text = "ED Discover Buddy";
+            Text = "ED Discover Buddy T";
             GetInstalledVersion();
             InitializeComponent();
             EDOverlay = new frmEDOverlay(this);
@@ -115,7 +115,8 @@ namespace EDDiscoverBuddy
                         }
                     }
                 }
-
+                else
+                    MessageBox.Show("No new update is available!");
             }
             catch (Exception ex)
             {
