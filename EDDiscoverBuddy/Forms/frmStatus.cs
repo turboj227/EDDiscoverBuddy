@@ -107,7 +107,7 @@ namespace EDDiscoverBuddy
                 {
                     EDOverlay.Close();
                     MessageBox.Show("Restarting Application!");
-                    Application.Restart();
+                    Application.Exit();
                 }
             }
             catch (Exception ex)
