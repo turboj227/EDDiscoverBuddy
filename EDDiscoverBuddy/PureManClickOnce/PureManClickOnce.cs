@@ -307,11 +307,14 @@ namespace PureManApplicationDeployment
             }
 
             await proc.WaitForExitAsync();
-
+            MessageBox.Show("1");
             if (!string.IsNullOrEmpty(setupPath))
             {
+                MessageBox.Show("2");
                 File.Delete(setupPath);
+                MessageBox.Show("3");
             }
+            MessageBox.Show("4");
 
             return true;
         }
