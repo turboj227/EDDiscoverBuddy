@@ -114,7 +114,10 @@ namespace EDDiscoverBuddy
                             MessageBox.Show("Failed to update new version!", "ED Discover Buddy");
                         }
                         else
+                        {
+                            MessageBox.Show("New version installed. Restarting Application", "ED Discover Buddy");
                             Application.Restart();
+                        }
                     }
                 }
                 else
