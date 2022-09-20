@@ -113,6 +113,8 @@ namespace EDDiscoverBuddy
                         {
                             MessageBox.Show("Failed to update new version!");
                         }
+                        else
+                            Application.Restart();
                     }
                 }
                 else
