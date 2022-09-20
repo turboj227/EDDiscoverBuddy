@@ -69,7 +69,7 @@ namespace EDDiscoverBuddy
             lblCommanderValue.Text = EDSystemInfo.CommanderName;
             lblIsEDRunningValue.Text = EDSystemInfo.EDRunning.ToString();
             lblCurrentSystemValue.Text = EDSystemInfo.CurrentSystem.StarSystem;
-            if (EDSystemInfo.TargetSystem!=null)
+            if (EDSystemInfo.TargetSystem != null)
                 lblNextSystemValue.Text = EDSystemInfo.TargetSystem.StarSystem;
             lblJumpsRemainingValue.Text = EDSystemInfo.RemainingJumps.ToString();
             lblNewDiscoveriesValue.Text = EDSystemInfo.NewDiscoveries.ToString();
@@ -94,6 +94,34 @@ namespace EDDiscoverBuddy
                 UseShellExecute = true
             };
             Process.Start(psInfo);
+        }
+
+        private void mnuCheckForUpdate_Click(object sender, EventArgs e)
+        {
+            CheckForNewVersion();
+        }
+        private async void CheckForNewVersion()
+        {
+            try
+            {
+                PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
+                if (await ClickOnce.UpdateAvailable())
+                {
+                    if (MessageBox.Show("New update " + await ClickOnce.ServerVersion() + " available!\nDo you want to download it?", "New version", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        if (!await ClickOnce.Update())
+                        {
+                            MessageBox.Show("Failed to update new version!");
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }

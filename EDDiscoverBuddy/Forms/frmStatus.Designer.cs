@@ -257,10 +257,10 @@
             // 
             // mnuCheckForUpdate
             // 
-            this.mnuCheckForUpdate.Enabled = false;
             this.mnuCheckForUpdate.Name = "mnuCheckForUpdate";
             this.mnuCheckForUpdate.Size = new System.Drawing.Size(209, 22);
             this.mnuCheckForUpdate.Text = "Check update";
+            this.mnuCheckForUpdate.Click += new System.EventHandler(this.mnuCheckForUpdate_Click);
             // 
             // mnuAbout
             // 
