@@ -105,6 +105,7 @@ namespace EDDiscoverBuddy
                 bool b = Task.Run(async () => await CheckForNewVersion()).Result;
                 if (b)
                 {
+                    EDOverlay.Close();
                     MessageBox.Show("Restarting Application!");
                     Application.Restart();
                 }
