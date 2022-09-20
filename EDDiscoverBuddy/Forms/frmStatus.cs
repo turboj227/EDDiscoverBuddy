@@ -100,9 +100,10 @@ namespace EDDiscoverBuddy
         {
             try
             {
-                Task<bool> b = CheckForNewVersion();
-                b.Wait();
-                if (b.Result)
+                //Task<bool> b = 
+                //Task b = CheckForNewVersion();
+                bool b = Task.Run(async () => await CheckForNewVersion()).Result;
+                if (b)
                 {
                     MessageBox.Show("Restarting Application!");
                     Application.Restart();
