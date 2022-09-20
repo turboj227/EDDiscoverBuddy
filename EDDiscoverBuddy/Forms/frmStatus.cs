@@ -100,19 +100,16 @@ namespace EDDiscoverBuddy
         {
             try
             {
-                Task<bool> b = CheckForNewVersion();
-                if (b.Result)
-                {
-                    MessageBox.Show("Restarting Application!");
-                    Application.Restart();
-                }
+                CheckForNewVersion();
+                MessageBox.Show("Restarting Application!");
+                Application.Restart();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private async Task<bool> CheckForNewVersion()
+        private async void CheckForNewVersion()
         {
             try
             {
@@ -125,11 +122,6 @@ namespace EDDiscoverBuddy
                         {
                             MessageBox.Show("Failed to update new version!", "ED Discover Buddy");
                         }
-                        else
-                        {
-                            MessageBox.Show("New version installed. Restarting Application", "ED Discover Buddy");
-                            return true;
-                        }
                     }
                 }
                 else
@@ -139,7 +131,6 @@ namespace EDDiscoverBuddy
             {
                 MessageBox.Show(ex.Message, "ED Discover Buddy");
             }
-            return false;
         }
     }
 }
