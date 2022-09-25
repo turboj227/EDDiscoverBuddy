@@ -21,4 +21,5 @@ namespace EDDiscoverBuddy
             Application.Run(new frmStatus());
         }
     }
+
 }

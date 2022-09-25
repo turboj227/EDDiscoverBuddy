@@ -25,6 +25,11 @@ namespace EDDiscoverBuddy.EDSM
             }
             return EDSMResult;
         }
+
+        internal static string GetSystemInfoURL(string SystemName)
+        {
+            return "https://www.edsm.net/en/system/id/0/name/" + SystemName;
+        }
     }
     public class EDSMBodies
     {

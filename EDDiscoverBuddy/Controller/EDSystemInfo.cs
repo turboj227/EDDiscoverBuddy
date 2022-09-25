@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -9,7 +10,7 @@ using static System.Windows.Forms.Design.AxImporter;
 
 namespace EDDiscoverBuddy
 {
-    internal class cEDSystemInfo
+    public class cEDSystemInfo
     {
         public string CommanderName = "";
         public int NewDiscoveries = 0;
@@ -25,8 +26,29 @@ namespace EDDiscoverBuddy
         public cEDSystem CurrentSystem = new cEDSystem();
         public cEDSystem NextSystem = new cEDSystem();
         public cEDSystem TargetSystem = new cEDSystem();
+
+        internal int getBodyCount()
+        {
+            return FullyScanned ? BodyCount : CurrentSystem.getBodyCount();
+        }
+
+        internal string GetSystemInfoURL(bool ForCurrentSystem)
+        {
+            if (ForCurrentSystem)
+            {
+                if (CurrentSystem != null && CurrentSystem.StarSystem!= null)
+                    return EDDiscoverBuddy.EDSM.EDSMHelper.GetSystemInfoURL(CurrentSystem.StarSystem);
+            }
+            else
+            {
+                if (TargetSystem != null && TargetSystem.StarSystem != null)
+                    return EDDiscoverBuddy.EDSM.EDSMHelper.GetSystemInfoURL(TargetSystem.StarSystem);
+            }
+
+            return "";
+        }
     }
-    internal class cEDSystem
+    public class cEDSystem
     {
         public string StarSystem = "";
         internal long SystemAddress;
@@ -36,12 +58,14 @@ namespace EDDiscoverBuddy
         public bool LookupOnline;
         public List<cPlanetBody> Bodies = new List<cPlanetBody>();
 
+        public bool WasDiscovered { get { return WasDiscoveredOnline || Bodies.Exists(a => a.WasDiscovered); } }
+
         internal cPlanetBody AddBody(string starSystem, long systemAddress, string bodyName, int? bodyID, string type
             , float distanceFromArrivalLS, bool isStar, bool wasMapped, bool wasDiscovered, bool fromOnline
             , float massEM, string terraformState)
         {
             //Check if Body exists
-            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == starSystem && a.SystemAddress == systemAddress && a.BodyName == bodyName && (a.BodyID == bodyID || a.BodyID==null || bodyID==null));
+            cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == starSystem && a.SystemAddress == systemAddress && a.BodyName == bodyName && (a.BodyID == bodyID || a.BodyID == null || bodyID == null));
             if (body == null)
             {
                 body = new cPlanetBody(starSystem, systemAddress, bodyName, bodyID, type, distanceFromArrivalLS, isStar
@@ -56,10 +80,10 @@ namespace EDDiscoverBuddy
         internal void PlanetMapped(string bodyName, int bodyID, bool mappedEfficient)
         {
             cPlanetBody? body = Bodies.FirstOrDefault(a => a.StarSystem == StarSystem && a.SystemAddress == SystemAddress && a.BodyName == bodyName);
-            if (body!=null)
+            if (body != null)
             {
                 body.WasMappedByMe = true;
-                body.WasMapped = true;
+                //body.WasMapped = true;
                 body.WasMappedEfficient = mappedEfficient;
                 body.CalcValue();
             }
@@ -69,9 +93,14 @@ namespace EDDiscoverBuddy
         {
             return Bodies.Sum(A => A.CurrentMappedValue);
         }
+
+        internal int getBodyCount()
+        {
+            return Bodies.Count(a => !a.FromOnline);
+        }
     }
 
-    internal class cPlanetBody
+    public class cPlanetBody
     {
         public string StarSystem = "";
         internal long SystemAddress;
@@ -150,106 +179,57 @@ namespace EDDiscoverBuddy
             }
             else
             {
-                return CalcEstimatedPlanetValue(specific_type, mass, terraform_state, options);
+                //return CalcEstimatedPlanetValue(specific_type, mass, terraform_state, options);
+                return GetBodyValue(CalcPLanetKValue(specific_type,terraform_state), mass, options.IsFirstDiscoverer, options.IsMapped, options.IsFirstMapper, options.EfficiencyBonus, true, false);
             }
 
         }
 
-        private int CalcEstimatedPlanetValue(string specific_type, float mass, int terraform_state, CalcOptions opt)
+        private int CalcPLanetKValue(string specific_type, int terraform_state)
         {
+            int bonus = 0;
 
-            float value = CalcPlanetValue(specific_type);
-            float bonus = CalcPLanetBonus(specific_type, terraform_state);
-
-            //# CALCULATION
-            float q = 0.56591828f;
-            value += bonus;
-            float map_multiplier = 1.0f;
-
-            if (opt.IsMapped)
-                map_multiplier = 3.3333333333f;
-
-                if (opt.IsFirstDiscoverer && opt.IsFirstMapper)
-                    map_multiplier = 3.699622554f;
-
-                else if (!opt.IsFirstDiscoverer && opt.IsFirstMapper)
-                    map_multiplier = 8.0956f;
-
-                if (opt.EfficiencyBonus)
-                    map_multiplier *= 1.25f;
-
-            value = (float)Math.Max((value + (value * Math.Pow(mass, 0.2f) * q)) * map_multiplier, 500f);
-
-            if (opt.IsFirstDiscoverer)
-                value *= 2.6f;
-
-            return (int)Math.Round(value);
-        }
-
-        private float CalcPLanetBonus(string specific_type, int terraform_state)
-        {
-            float bonus = 0f;
-
-            if (terraform_state > 0)
-                bonus = 93328f;
+            //TODO: check these items:
+            //Gas giant with water-based life
+            //Gas giant with ammonia-based life
             switch (Globals.PlanetType(specific_type))
             {
                 //# Metal-rich body
                 case 1:
-                    if (terraform_state > 0)
-                        bonus = 65631f;
+                        bonus = 21790;
+                    break;
+                //# Ammonia world
+                case 51:
+                    bonus = 96932;
+                    break;
+                //# Class I gas giant
+                case 71:
+                    bonus = 1656;
                     break;
                 //# High metal content world / Class II gas giant
                 case 2:
                 case 72:
+                    bonus = 9654;
                     if (terraform_state > 0)
-                        bonus = 100677f;
+                        bonus = 100677;
                     break;
                 //# Earth-like world / Water world
                 case 31:
-                    bonus = 116295f;
-                    break;
                 case 41:
+                    bonus = 64831;
                     if (terraform_state > 0)
-                        bonus = 116295f;
+                        bonus = 116295;
+                    break;
+                default:
+                    {
+                        bonus = 300;
+                        if (terraform_state > 0)
+                            bonus = 93328;
+                    }
                     break;
             }
             return bonus;
         }
-
-        private float CalcPlanetValue(string specific_type)
-        {
-
-            float value = 300;
-            switch (Globals.PlanetType(specific_type))
-            {
-                //# Metal-rich body
-                case 1:
-                    value = 21790;
-                    break;
-                //# Ammonia world
-                case 51:
-                    value = 96932;
-                    break;
-                //# Class I gas giant
-                case 71:
-                    value = 1656;
-                    break;
-                //# High metal content world / Class II gas giant
-                case 2:
-                case 72:
-                    value = 9654;
-                    break;
-                //# Earth-like world / Water world
-                case 31:
-                case 41:
-                    value = 64831;
-                    break;
-            }
-
-            return value;
-        }
-
         private int CalcEstimatedStarValue(string specific_type, float mass)
         {
 
@@ -277,6 +257,44 @@ namespace EDDiscoverBuddy
             return (int)Math.Round(value + (mass * value / 66.25f));
 
         }
+
+        static int GetBodyValue(int k, double mass, bool isFirstDiscoverer, bool isMapped, bool isFirstMapped, bool withEfficiencyBonus, bool isOdyssey, bool isFleetCarrierSale)
+        {
+            const double q = 0.56591828;
+            double mappingMultiplier = 1;
+            if (isMapped)
+            {
+                if (isFirstDiscoverer && isFirstMapped)
+                {
+                    mappingMultiplier = 3.699622554;
+                }
+                else if (isFirstMapped)
+                {
+                    mappingMultiplier = 8.0956;
+                }
+                else
+                {
+                    mappingMultiplier = 3.3333333333;
+                }
+            }
+            double value = (k + k * q * Math.Pow(mass, 0.2)) * mappingMultiplier;
+            if (isMapped)
+            {
+                if (isOdyssey)
+                {
+                    value += ((value * 0.3) > 555) ? value * 0.3 : 555;
+                }
+                if (withEfficiencyBonus)
+                {
+                    value *= 1.25;
+                }
+            }
+            value = Math.Max(500, value);
+            value *= (isFirstDiscoverer) ? 2.6 : 1;
+            value *= (isFleetCarrierSale) ? 0.75 : 1;
+            return (int)Math.Round(value);
+        }
+
     }
     internal class CalcOptions
     {

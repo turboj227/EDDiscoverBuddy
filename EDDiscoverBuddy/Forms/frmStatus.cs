@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using EDDiscoverBuddy.Controller;
+using System.Security.Policy;
+using EDDiscoverBuddy.Forms;
 
 namespace EDDiscoverBuddy
 {
@@ -24,13 +27,14 @@ namespace EDDiscoverBuddy
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        private cEDSystemInfo EDSystemInfo = new cEDSystemInfo();
         frmEDOverlay EDOverlay;
         public frmStatus()
         {
             Text = "ED Discover Buddy";
             GetInstalledVersion();
             InitializeComponent();
-            EDOverlay = new frmEDOverlay(this);
+            EDOverlay = new frmEDOverlay(this, EDSystemInfo);
         }
         private async void GetInstalledVersion()
         {
@@ -54,9 +58,13 @@ namespace EDDiscoverBuddy
         }
         private void frmStatus_Load(object sender, EventArgs e)
         {
+            this.Left = Settings.StatusWindowPositionLeft;
+            this.Top = Settings.StatusWindowPositionTop;
             EDOverlay.Show();
             _ = SetWindowPos(EDOverlay.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
-            _ = SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            if (Settings.StatusScreenOnTop)
+                _ = SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            EDOverlay.Visible = Settings.ShowIngameOverlay;
         }
 
         private void frmStatus_FormClosing(object sender, FormClosingEventArgs e)
@@ -114,31 +122,73 @@ namespace EDDiscoverBuddy
                 MessageBox.Show(ex.Message);
             }
         }
-        /*private async Task<bool> CheckForNewVersion()
+
+        private void lblCurrentSystemValue_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
-                if (await ClickOnce.UpdateAvailable())
-                {
-                    if (MessageBox.Show("New update " + await ClickOnce.ServerVersion() + " available!\nDo you want to download it?", "ED Discover Buddy", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        if (!await ClickOnce.Update())
-                        {
-                            MessageBox.Show("Failed to update new version!", "ED Discover Buddy");
-                        }
-                        else
-                            return true;
-                    }
-                }
-                else
-                    MessageBox.Show("No new update is available!", "ED Discover Buddy");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "ED Discover Buddy");
-            }
-            return false;
-        }*/
+            Process myProcess = new Process();
+
+            // true is the default, but it is important not to set it to false
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = EDSystemInfo.GetSystemInfoURL(true);
+            myProcess.Start();
+        }
+
+        private void lblNextSystemValue_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process myProcess = new Process();
+
+            // true is the default, but it is important not to set it to false
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = EDSystemInfo.GetSystemInfoURL(false);
+            myProcess.Start();
+        }
+
+        private void cmbCopyCurrentSystemName_Click(object sender, EventArgs e)
+        {
+            if (EDSystemInfo!=null && EDSystemInfo.CurrentSystem!=null && EDSystemInfo.CurrentSystem.StarSystem!=null)
+                Clipboard.SetText(EDSystemInfo.CurrentSystem.StarSystem);
+            this.ActiveControl = null;
+        }
+
+        private void cmdCopyNextSystemName_Click(object sender, EventArgs e)
+        {
+            if (EDSystemInfo != null && EDSystemInfo.TargetSystem != null && EDSystemInfo.TargetSystem.StarSystem != null)
+                Clipboard.SetText(EDSystemInfo.TargetSystem.StarSystem);
+            this.ActiveControl = null;
+        }
+
+        private void mnuSettings_Click(object sender, EventArgs e)
+        {
+            frmSettings frmSettings = new frmSettings();
+            _ = SetWindowPos(frmSettings.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            frmSettings.ShowDialog(this);
+        }
+
+        /*private async Task<bool> CheckForNewVersion()
+{
+try
+{
+PureManApplicationDeployment.PureManClickOnce ClickOnce = new PureManApplicationDeployment.PureManClickOnce("https://raw.githubusercontent.com/turboj227/EDDiscoverBuddy/master/published/");
+if (await ClickOnce.UpdateAvailable())
+{
+if (MessageBox.Show("New update " + await ClickOnce.ServerVersion() + " available!\nDo you want to download it?", "ED Discover Buddy", MessageBoxButtons.YesNo) == DialogResult.Yes)
+{
+if (!await ClickOnce.Update())
+{
+MessageBox.Show("Failed to update new version!", "ED Discover Buddy");
+}
+else
+return true;
+}
+}
+else
+MessageBox.Show("No new update is available!", "ED Discover Buddy");
+}
+catch (Exception ex)
+{
+MessageBox.Show(ex.Message, "ED Discover Buddy");
+}
+return false;
+}*/
     }
 }

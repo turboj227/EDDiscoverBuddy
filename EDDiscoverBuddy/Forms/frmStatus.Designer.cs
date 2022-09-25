@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmStatus));
             this.lblIsEDRunning = new System.Windows.Forms.Label();
             this.lblNextSystem = new System.Windows.Forms.Label();
             this.lblJumpsRemainingValue = new System.Windows.Forms.Label();
-            this.lblCurrentSystemValue = new System.Windows.Forms.Label();
             this.lblCurrentSystem = new System.Windows.Forms.Label();
-            this.lblNextSystemValue = new System.Windows.Forms.Label();
             this.lblNewDiscoveries = new System.Windows.Forms.Label();
             this.lblSurfaceScanValue = new System.Windows.Forms.Label();
             this.lblSurfaceScans = new System.Windows.Forms.Label();
@@ -57,6 +56,11 @@
             this.lblDiscoveryValuesValue = new System.Windows.Forms.Label();
             this.lblCurrentSystemPlanetValue = new System.Windows.Forms.Label();
             this.lblCurrentSystemPlanetValueValue = new System.Windows.Forms.Label();
+            this.lblCurrentSystemValue = new System.Windows.Forms.LinkLabel();
+            this.lblNextSystemValue = new System.Windows.Forms.LinkLabel();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.cmbCopyCurrentSystemName = new System.Windows.Forms.Button();
+            this.cmdCopyNextSystemName = new System.Windows.Forms.Button();
             this.mnuMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,15 +91,6 @@
             this.lblJumpsRemainingValue.Size = new System.Drawing.Size(180, 15);
             this.lblJumpsRemainingValue.TabIndex = 2;
             // 
-            // lblCurrentSystemValue
-            // 
-            this.lblCurrentSystemValue.AutoSize = true;
-            this.lblCurrentSystemValue.Location = new System.Drawing.Point(140, 82);
-            this.lblCurrentSystemValue.MinimumSize = new System.Drawing.Size(180, 0);
-            this.lblCurrentSystemValue.Name = "lblCurrentSystemValue";
-            this.lblCurrentSystemValue.Size = new System.Drawing.Size(180, 15);
-            this.lblCurrentSystemValue.TabIndex = 3;
-            // 
             // lblCurrentSystem
             // 
             this.lblCurrentSystem.AutoSize = true;
@@ -104,15 +99,6 @@
             this.lblCurrentSystem.Size = new System.Drawing.Size(87, 15);
             this.lblCurrentSystem.TabIndex = 4;
             this.lblCurrentSystem.Text = "Current system";
-            // 
-            // lblNextSystemValue
-            // 
-            this.lblNextSystemValue.AutoSize = true;
-            this.lblNextSystemValue.Location = new System.Drawing.Point(140, 107);
-            this.lblNextSystemValue.MinimumSize = new System.Drawing.Size(180, 0);
-            this.lblNextSystemValue.Name = "lblNextSystemValue";
-            this.lblNextSystemValue.Size = new System.Drawing.Size(180, 15);
-            this.lblNextSystemValue.TabIndex = 5;
             // 
             // lblNewDiscoveries
             // 
@@ -229,20 +215,20 @@
             // 
             // mnuSettings
             // 
-            this.mnuSettings.Enabled = false;
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(116, 22);
+            this.mnuSettings.Size = new System.Drawing.Size(180, 22);
             this.mnuSettings.Text = "Settings";
+            this.mnuSettings.Click += new System.EventHandler(this.mnuSettings_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(116, 22);
+            this.mnuExit.Size = new System.Drawing.Size(180, 22);
             this.mnuExit.Text = "Exit";
             this.mnuExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -305,11 +291,70 @@
             this.lblCurrentSystemPlanetValueValue.Size = new System.Drawing.Size(180, 15);
             this.lblCurrentSystemPlanetValueValue.TabIndex = 22;
             // 
+            // lblCurrentSystemValue
+            // 
+            this.lblCurrentSystemValue.AutoSize = true;
+            this.lblCurrentSystemValue.Location = new System.Drawing.Point(140, 82);
+            this.lblCurrentSystemValue.Name = "lblCurrentSystemValue";
+            this.lblCurrentSystemValue.Size = new System.Drawing.Size(0, 15);
+            this.lblCurrentSystemValue.TabIndex = 24;
+            this.lblCurrentSystemValue.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblCurrentSystemValue_LinkClicked);
+            // 
+            // lblNextSystemValue
+            // 
+            this.lblNextSystemValue.AutoSize = true;
+            this.lblNextSystemValue.Location = new System.Drawing.Point(140, 107);
+            this.lblNextSystemValue.Name = "lblNextSystemValue";
+            this.lblNextSystemValue.Size = new System.Drawing.Size(0, 15);
+            this.lblNextSystemValue.TabIndex = 25;
+            this.lblNextSystemValue.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblNextSystemValue_LinkClicked);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "copy.png");
+            // 
+            // cmbCopyCurrentSystemName
+            // 
+            this.cmbCopyCurrentSystemName.FlatAppearance.BorderSize = 0;
+            this.cmbCopyCurrentSystemName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbCopyCurrentSystemName.ImageIndex = 0;
+            this.cmbCopyCurrentSystemName.ImageList = this.imageList1;
+            this.cmbCopyCurrentSystemName.Location = new System.Drawing.Point(114, 78);
+            this.cmbCopyCurrentSystemName.Margin = new System.Windows.Forms.Padding(0);
+            this.cmbCopyCurrentSystemName.Name = "cmbCopyCurrentSystemName";
+            this.cmbCopyCurrentSystemName.Size = new System.Drawing.Size(26, 26);
+            this.cmbCopyCurrentSystemName.TabIndex = 26;
+            this.cmbCopyCurrentSystemName.TabStop = false;
+            this.cmbCopyCurrentSystemName.UseVisualStyleBackColor = true;
+            this.cmbCopyCurrentSystemName.Click += new System.EventHandler(this.cmbCopyCurrentSystemName_Click);
+            // 
+            // cmdCopyNextSystemName
+            // 
+            this.cmdCopyNextSystemName.FlatAppearance.BorderSize = 0;
+            this.cmdCopyNextSystemName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmdCopyNextSystemName.ImageIndex = 0;
+            this.cmdCopyNextSystemName.ImageList = this.imageList1;
+            this.cmdCopyNextSystemName.Location = new System.Drawing.Point(114, 103);
+            this.cmdCopyNextSystemName.Margin = new System.Windows.Forms.Padding(0);
+            this.cmdCopyNextSystemName.Name = "cmdCopyNextSystemName";
+            this.cmdCopyNextSystemName.Size = new System.Drawing.Size(26, 26);
+            this.cmdCopyNextSystemName.TabIndex = 27;
+            this.cmdCopyNextSystemName.TabStop = false;
+            this.cmdCopyNextSystemName.UseVisualStyleBackColor = true;
+            this.cmdCopyNextSystemName.Click += new System.EventHandler(this.cmdCopyNextSystemName_Click);
+            // 
             // frmStatus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(334, 281);
+            this.Controls.Add(this.cmdCopyNextSystemName);
+            this.Controls.Add(this.cmbCopyCurrentSystemName);
+            this.Controls.Add(this.lblNextSystemValue);
+            this.Controls.Add(this.lblCurrentSystemValue);
             this.Controls.Add(this.lblCurrentSystemPlanetValue);
             this.Controls.Add(this.lblCurrentSystemPlanetValueValue);
             this.Controls.Add(this.lblDiscoveryValues);
@@ -324,9 +369,7 @@
             this.Controls.Add(this.lblSurfaceScans);
             this.Controls.Add(this.lblSurfaceScanValue);
             this.Controls.Add(this.lblNewDiscoveries);
-            this.Controls.Add(this.lblNextSystemValue);
             this.Controls.Add(this.lblCurrentSystem);
-            this.Controls.Add(this.lblCurrentSystemValue);
             this.Controls.Add(this.lblJumpsRemainingValue);
             this.Controls.Add(this.lblNextSystem);
             this.Controls.Add(this.lblIsEDRunning);
@@ -335,6 +378,7 @@
             this.MainMenuStrip = this.mnuMenu;
             this.MinimumSize = new System.Drawing.Size(350, 320);
             this.Name = "frmStatus";
+            this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmStatus_FormClosing);
             this.Load += new System.EventHandler(this.frmStatus_Load);
             this.mnuMenu.ResumeLayout(false);
@@ -349,9 +393,7 @@
         private Label lblIsEDRunning;
         private Label lblNextSystem;
         private Label lblJumpsRemainingValue;
-        private Label lblCurrentSystemValue;
         private Label lblCurrentSystem;
-        private Label lblNextSystemValue;
         private Label lblNewDiscoveries;
         private Label lblSurfaceScanValue;
         private Label lblSurfaceScans;
@@ -374,5 +416,10 @@
         private Label lblDiscoveryValuesValue;
         private Label lblCurrentSystemPlanetValue;
         private Label lblCurrentSystemPlanetValueValue;
+        private LinkLabel lblCurrentSystemValue;
+        private LinkLabel lblNextSystemValue;
+        private ImageList imageList1;
+        private Button cmbCopyCurrentSystemName;
+        private Button cmdCopyNextSystemName;
     }
 }

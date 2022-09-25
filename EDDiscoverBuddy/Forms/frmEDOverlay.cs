@@ -1,5 +1,7 @@
+using EDDiscoverBuddy.Controller;
 using EXControls;
 using System.Collections;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection.Emit;
 using System.Windows.Forms;
@@ -24,8 +26,9 @@ namespace EDDiscoverBuddy
             set { m_Ticks = value; }
         }
 
-        public frmEDOverlay(frmStatus frmStatus)
+        public frmEDOverlay(frmStatus frmStatus, cEDSystemInfo eDSystemInfo)
         {
+            EDSystemInfo = eDSystemInfo;
             InitializeComponent();
             this.frmStatus = frmStatus;
             JournalReader.ReadAllEntries(ref EDSystemInfo, true);
@@ -35,6 +38,7 @@ namespace EDDiscoverBuddy
         {
             JournalReader.ReadAllEntries(ref EDSystemInfo, false);
             frmStatus.UpdateInfo(EDSystemInfo);
+            //EDSystemInfo.CurrentSystem.Bodies.OrderBy(A=>A.BodyName).ToList().ForEach(A => Debug.WriteLine(A.BodyName + " -> " + A.CurrentMappedValue + " -> " + A.MassEM));
             if (EDSystemInfo.EDRunning)
             {
                 if (EDSystemInfo.Jumping)
@@ -46,7 +50,7 @@ namespace EDDiscoverBuddy
                     EXImageListViewItem lviSystemInfo = new EXImageListViewItem();
 
                     ArrayList images = new ArrayList();
-                    if (!EDSystemInfo.NextSystem.WasDiscoveredOnline)
+                    if (!EDSystemInfo.NextSystem.WasDiscovered)
                         images.Add(Image.FromFile("Icons/FirstDiscovery.png"));
                     if (EDSystemInfo.NextSystem.CanRefuel)
                         images.Add(Image.FromFile("Icons/Refuel.png"));
@@ -75,7 +79,7 @@ namespace EDDiscoverBuddy
                     lsvSystemInfo.Items.Clear();
                     EXImageListViewItem lviSystemInfo = new EXImageListViewItem();
                     ArrayList images = new ArrayList();
-                    if (!EDSystemInfo.CurrentSystem.WasDiscoveredOnline)
+                    if (!EDSystemInfo.CurrentSystem.WasDiscovered)
                         images.Add(Image.FromFile("Icons/FirstDiscovery.png"));
                     if (EDSystemInfo.CurrentSystem.CanRefuel)
                         images.Add(Image.FromFile("Icons/Refuel.png"));
@@ -92,7 +96,7 @@ namespace EDDiscoverBuddy
                     EXMultipleImagesListViewSubItem subIcons = new EXMultipleImagesListViewSubItem();
                     if (images.Count>0)
                         subIcons.MyImages = images;
-                    subIcons.Text = EDSystemInfo.CurrentSystem.Bodies.Count(a => !a.FromOnline) + "/" + EDSystemInfo.BodyCount;
+                    subIcons.Text = EDSystemInfo.getBodyCount() + "/" + EDSystemInfo.BodyCount;
                     lviSystemInfo.SubItems.Add(subIcons);
                     EXImageListViewSubItem Jumps = new EXImageListViewSubItem();
                     lviSystemInfo.SubItems.Add(Jumps);
@@ -112,7 +116,7 @@ namespace EDDiscoverBuddy
                     {
                         lsvHighValuePlanets.Items.RemoveAt(1);
                     }
-                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MaxedMappedValue >= 500000 && !a.WasMappedByMe).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
+                    EDSystemInfo.CurrentSystem.Bodies.Where(a => a.MaxedMappedValue >= Settings.InterestedFrom && !a.WasMappedByMe).OrderBy(a => a.DistanceFromArrivalLS).ToList().ForEach(b => AddValuablePlanet(b));
                     if (lsvHighValuePlanets.Items.Count == 1)
                         lsvHighValuePlanets.Visible = false;
                     else
